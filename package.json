@@ -1,0 +1,39 @@
+{
+  "name": "esa-mcp",
+  "version": "1.0.2",
+  "description": "MCP client for esa API",
+  "type": "module",
+  "main": "./build/index.js",
+  "bin": {
+    "esa-mcp": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && chmod 755 build/index.js",
+    "start": "build/index.js",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "esa",
+    "api",
+    "mcp"
+  ],
+  "author": "mattyatea",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattyatea/esa-mcp"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "esa-api-client": "^1.1.5",
+    "ts-node": "^10.9.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  }
+}
