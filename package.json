@@ -1,6 +1,7 @@
 {
   "name": "esa-mcp",
   "version": "1.0.2",
+  "license": "MIT",
   "description": "MCP client for esa API",
   "type": "module",
   "main": "./build/index.js",
