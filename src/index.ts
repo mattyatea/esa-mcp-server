@@ -15,7 +15,7 @@ const esa = new EsaClient({
 
 const server = new McpServer({
     name: "esa",
-    version: "1.0.0",
+    version: "1.1.0",
 });
 
 function formatPost(post: Post): {type: "text", text: string} {
