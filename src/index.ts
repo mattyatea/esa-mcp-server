@@ -1,8 +1,6 @@
-#!/usr/bin/env node
-
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {EsaClient} from "esa-api-client"
+import { EsaClient } from "esa-api-client"
 import { z } from "zod";
 if (!process.env.ESA_API_TOKEN || !process.env.ESA_TEAM_NAME) {
     console.error("Please set ESA_API_TOKEN and ESA_TEAM_NAME environment variables.");
@@ -24,12 +22,6 @@ const server = new McpServer({
     },
 });
 
-function extractPostNumber(path: string): number {
-    const match = path.match(/^\/posts\/(\d+)$/);
-    return match ? parseInt(match[1], 10) : 0;
-}
-
-// Register "get_current_time" tools
 server.tool(
     "search_esa_posts",
     "Search for posts within esa",
@@ -45,7 +37,7 @@ server.tool(
     },
 );
 
-server.tool("get_latest_esa_posts", "Get ESA posts", {}, async () => {
+server.tool("get_latest_esa_posts", "Get Latest Esa Posts", {}, async () => {
     const posts = await esa.getPosts({
         page: 1,
         per_page: 5,
@@ -58,6 +50,27 @@ server.tool("get_latest_esa_posts", "Get ESA posts", {}, async () => {
                 text: `${post.name} (${post.full_name}) \n${post.wip ? "WIP" : "Published"}\n${post.body_md}`,
             };
         })
+    };
+})
+
+server.tool("create_esa_post", "Create a new post in esa", {title: z.string().describe("Title of the post"), body: z.string().describe("Body of the post with markdown"),tags: z.array(z.string()).describe("Post tags"),category: z.string().describe("Post category")}, async ({title, body,tags,category}) => {
+    const post = await esa.createPost({
+        name: title,
+        body_md: body,
+        tags: Array.isArray(tags) ? tags : [tags],
+        category: category,
+        wip: true,
+    });
+    
+    if (!post) {
+        throw new Error("Failed to create post");
+    }
+    
+    return {
+        content: [{
+            type: "text",
+            text: `Post created: ${post.full_name}`,
+        }],
     };
 })
 
